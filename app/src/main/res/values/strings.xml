@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Speech</string>
+    <string name="train_your_voice_title_text">Train your voice</string>
+</resources>
