@@ -19,7 +19,7 @@ android {
     }
 
 
-    dataBinding{
+    dataBinding {
         enabled true
     }
 }
@@ -28,6 +28,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation "com.android.support:cardview-v7:27.1.1"
+    implementation "com.android.support:recyclerview-v7:27.1.1"
+    implementation "com.android.support:design:27.1.1"
     implementation 'com.github.zagum:SpeechRecognitionView:1.2.2'
 
 

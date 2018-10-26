@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Speech</string>
     <string name="train_your_voice_title_text">Train your voice</string>
+    <string name="tts_wait_msg">Initializing... Please wait</string>
+    <string name="tts_install_msg">Install a TTS engine</string>
+    <string name="failed">Operation failed</string>
 </resources>

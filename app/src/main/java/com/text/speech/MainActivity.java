@@ -1,118 +1,79 @@
 package com.text.speech;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.zagum.speechrecognitionview.adapters.RecognitionListenerAdapter;
 import com.text.speech.databinding.ActivityMainBinding;
+import com.text.speech.utils.CallHelper;
+import com.text.speech.utils.ToolTipHelper;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener {
+public class MainActivity extends BaseActivity  {
     private static final String TAG = "MainActivity";
-    private SpeechRecognizer speechRecognizer;
+
     ActivityMainBinding activityMainBinding;
+    private String welcomeText2 = "Please say the number you want to call";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        super.onCreate(savedInstanceState);
 
-        speechRecognizer =  SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(this);
 
-        activityMainBinding.recognitionView.setSpeechRecognizer(speechRecognizer);
-        activityMainBinding.recognitionView.setRecognitionListener(new RecognitionListenerAdapter() {
-            @Override
-            public void onResults(Bundle results) {
-                showResults(results);
-            }
-        });
-       // startListening();
-
-    }
-
-    private void startListening() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say hello!");
-        speechRecognizer.startListening(intent);
-    }
-
-    @Override
-    public void onReadyForSpeech(Bundle params) {
-        Log.i(TAG, "onReadyForSpeech: ");
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-        Log.i(TAG, "onBeginningOfSpeech: ");
 
     }
 
     @Override
-    public void onRmsChanged(float rmsdB) {
-        Log.i(TAG, "onRmsChanged: ");
-
-    }
-
-    @Override
-    public void onBufferReceived(byte[] buffer) {
-        Log.i(TAG, "onBufferReceived: ");
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-        Log.i(TAG, "onEndOfSpeech: ");
-        activityMainBinding.recognitionView.stop();
-    }
-
-    @Override
-    public void onError(int error) {
-        Log.e(TAG, "onError: " + error );
-    }
-
-    @Override
-    public void onResults(Bundle results) {
-        showResults(results);
-    }
-
-    private void showResults(Bundle results) {
-        ArrayList<String> data =  results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        if (data != null) {
-            activityMainBinding.tvText.setText(data.get(0));
+    public void showResults(Bundle results) {
+        ArrayList<String> matches = results
+                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String word =  matches.get(0);
+        ToolTipHelper.showCheatSheet(getProgressView(), String.format("You said %s", word));
+        String number = word.replaceAll("\\s+","");
+        if (TextUtils.isDigitsOnly(number.trim())){
+            CallHelper.call(this, word);
+        }else{
+//            ToolTipHelper.showCheatSheet(getProgressView(), welcomeText2);
+            speakText(welcomeText2);
         }
     }
 
-    @Override
-    public void onPartialResults(Bundle partialResults) {
-        Log.i(TAG, "onPartialResults: ");
-    }
-
-    @Override
-    public void onEvent(int eventType, Bundle params) {
-        Log.i(TAG, "onEvent: ");
-    }
 
     public void clickedMe(View view) {
-        startListening();
-        activityMainBinding.recognitionView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startListening();
-            }
-        }, 50);
-        activityMainBinding.recognitionView.play();
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+        } else {
+            startRecognition();
+            activityMainBinding.recognitionView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startRecognition();
+                }
+            }, 50);
+        }
     }
+
+
+
+
+
 }
