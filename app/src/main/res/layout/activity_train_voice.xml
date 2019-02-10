@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:weightSum="5"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TrainVoiceActivity">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="32sp"
+        android:typeface="monospace"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/train_your_voice_title_text"
+        android:textAppearance="?android:textAppearanceLarge"/>
+
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        app:srcCompat="@drawable/ic_mic_purple_24dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_word"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textColor="@color/colorAccent"
+        android:typeface="monospace"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        android:text="Say Hello"/>
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:background="@drawable/rectangle_round_corners_purple"
+        android:text="Done"/>
+
+</LinearLayout>

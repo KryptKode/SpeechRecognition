@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.text.speech.CallActivity">
+    
+    <ImageView
+        android:id="@+id/img_call"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:orientation= "vertical"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:srcCompat ="@drawable/ic_call"
+        android:contentDescription="Voice Icon"/>
+    
+    <TextView
+        android:id="@+id/tv_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:text="make a call"
+        android:textSize="22sp" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:text="who do you want to call"
+        android:textSize="22sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click me"
+        android:id="@+id/button1"
+        android:layout_gravity="center_horizontal"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/img_voice"
+        android:layout_weight="1"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:srcCompat ="@drawable/ic_voice"
+        android:contentDescription="Voice Icon"/>
+
+</LinearLayout>
