@@ -8,6 +8,10 @@ import android.net.Uri;
 import java.io.IOException;
 
 public class Player implements MediaPlayer.OnPreparedListener {
+    public static final String WELCOME_FILE = "please train your voice in the next screen.3gpp";
+    public static final String TRAIN_YOUR_VOICE = "train your voice.3gpp";
+    public static final String VOICE_TRAINING_COMPLETE = "voice training complete.3gpp";
+
     public static final String AUDIO = "audio";
     private MediaPlayer mediaPlayer;
 

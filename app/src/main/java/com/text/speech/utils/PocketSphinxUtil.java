@@ -16,6 +16,7 @@ import io.reactivex.CompletableOnSubscribe;
 public class PocketSphinxUtil implements RecognitionListener {
     private static final String IGBO = "igbo";
     private static final String TAG = "PocketSphinxUtil";
+    public static final int TIMEOUT = 10000; // 10000ms = 10 secs
     private SpeechRecognizer recognizer;
     private Listener listener;
 
@@ -30,10 +31,13 @@ public class PocketSphinxUtil implements RecognitionListener {
         this.listener = listener;
     }
 
+    public void startListening(){
+        recognizer.startListening(IGBO, TIMEOUT);
+    }
+
     private void setUpRecognizer(File assetsDir) throws IOException {
         // The recognizer can be configured to perform multiple searches
         // of different kind and switch between them
-
         recognizer = SpeechRecognizerSetup.defaultSetup()
                 .setAcousticModel(new File(assetsDir, "igbo"))
                 .setDictionary(new File(assetsDir, "igbo.dict"))
@@ -79,14 +83,19 @@ public class PocketSphinxUtil implements RecognitionListener {
 
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
-        Log.d(TAG, "onPartialResult: HYP = " + hypothesis.getHypstr());
+        if (hypothesis != null) {
+            Log.d(TAG, "onPartialResult: HYP = " + hypothesis.getHypstr());
+        }
     }
 
     @Override
     public void onResult(Hypothesis hypothesis) {
-        Log.i(TAG, "onResult: "+ hypothesis.getHypstr());
-        if (listener != null) {
-            listener.onResult(hypothesis.getHypstr());
+        if (hypothesis != null) {
+            Log.i(TAG, "onResult: "+ hypothesis.getHypstr());
+            if (listener != null) {
+                listener.onResult(hypothesis.getHypstr());
+            }
+
         }
 
     }

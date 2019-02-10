@@ -19,8 +19,21 @@
     <string name="sms_permission_never_ask">To use this feature, allow the permissions in settings</string>
 
 
-    <string name="error_occurred">An error occurred</string>
+    <string name="allow_recognizer_permission_msg">For the app to recognize your voice and store metadata, allow the permissions</string>
+    <string name="recognizer_permission_denied">Permission denied to allow the app to recognize your voice and store metadata, please allow</string>
+    <string name="recognizer_permission_never_ask">To use this feature, allow the permissions in settings</string>
+
+
+    <string name="error_occurred">An error occurred, please try again</string>
     <string name="ruth">Ruth</string>
+    <string name="please_train_your_voice_in_the_next_screen">Please train your voice in the next screen</string>
+    <string name="proceed">proceed</string>
+    <string name="choose_action">Choose an action</string>
+    <string name="send_an_sms">Send an SMS</string>
+    <string name="sms_icon">SMS Icon</string>
+    <string name="make_a_call">Make a call</string>
+    <string name="voice_icon">Voice Icon</string>
+    <string name="voice_training_complete">Voice training complete...</string>
 
 
 </resources>

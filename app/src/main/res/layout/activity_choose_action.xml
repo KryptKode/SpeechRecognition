@@ -1,82 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:baselineAligned="false"
     android:gravity="center"
-    tools:context=".ui.ChooseActionActivity">
-    
-    <LinearLayout
-        android:id="@+id/root_call"
+    android:orientation="horizontal"
+    tools:context=".ui.ChooseActionActivity"
+    tools:ignore="UnusedAttribute">
+
+    <com.text.speech.views.SupportVectorDrawableTextView
+        android:id="@+id/tv_call"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:clickable="true"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawablePadding="8dp"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
         android:onClick="onClickCall"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/img_call"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:srcCompat="@drawable/ic_call"
-            android:contentDescription="Voice Icon" />
-
-        <TextView
-            android:id="@+id/tv_call"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            android:textStyle="bold"
-            android:text="Make a call"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp"/>
-
-    </LinearLayout>
+        android:text="@string/make_a_call"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_sms"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tv_DrawableTopCompat="@drawable/ic_call" />
 
 
-    <LinearLayout
-        android:id="@+id/root_sms"
+    <com.text.speech.views.SupportVectorDrawableTextView
+        android:id="@+id/tv_sms"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:onClick="onClickSms"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="8dp"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
+        android:onClick="onClickSms"
+        android:text="@string/send_an_sms"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_call"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_call"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tv_DrawableTopCompat="@drawable/ic_sms" />
 
-        <ImageView
-            android:id="@+id/img_sms"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:srcCompat="@drawable/ic_sms"
-            android:contentDescription="SMS Icon" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_call" />
 
-        <TextView
-            android:id="@+id/tv_sms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            android:textStyle="bold"
-            android:text="Send an SMS"
-            android:textColor="@color/colorPrimary"
-            android:textSize="22sp"/>
 
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
