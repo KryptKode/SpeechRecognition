@@ -9,10 +9,16 @@
     <string name="phone_caption">To try phonetic recognition say anything.</string>
     <string name="info">Info</string>
     <string name="info_msg">Are you sure you want to continue?</string>
-    <string name="allow_phone">Allow Permission</string>
-    <string name="allow_phone_msg">For the app to make phone calls for you, allow the permission</string>
+    <string name="allow_permission">Allow Permission</string>
+    <string name="allow_call_permission_msg">For the app to make phone calls for you, allow the permissions</string>
     <string name="call_permission_denied">Permission denied to allow the app make calls, please allow</string>
-    <string name="call_permission_never_ask">To use this feature, allow the call  permission in settings</string>
+    <string name="call_permission_never_ask">To use this feature, allow the permissions in settings</string>
+
+    <string name="allow_sms_permission_msg">For the app to make send sms for you, allow the permissions</string>
+    <string name="sms_permission_denied">Permission denied to allow the app send sms, please allow</string>
+    <string name="sms_permission_never_ask">To use this feature, allow the permissions in settings</string>
+
+
     <string name="error_occurred">An error occurred</string>
 
 

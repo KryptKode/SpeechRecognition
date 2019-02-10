@@ -1,8 +1,6 @@
 package com.text.speech.ui;
 
 import android.Manifest;
-import android.content.Intent;
-import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -100,7 +98,7 @@ public class CallActivity extends AppCompatActivity {
 
     @OnShowRationale({Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE})
     void showCallRationale(PermissionRequest request) {
-        InfoConfirmDialog.showDialog(this, R.string.allow_phone, R.string.allow_phone_msg, R.drawable.ic_call_white, request::proceed);
+        InfoConfirmDialog.showDialog(this, R.string.allow_permission, R.string.allow_call_permission_msg, R.drawable.ic_call_white, request::proceed);
     }
 
     @OnPermissionDenied({Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE})
