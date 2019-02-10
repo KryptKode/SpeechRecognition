@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SupportVectorDrawableTextView">
+        <attr name="tv_DrawableStartCompat" format="reference" />
+        <attr name="tv_DrawableEndCompat" format="reference" />
+        <attr name="tv_DrawableTopCompat" format="reference" />
+        <attr name="tv_DrawableBottomCompat" format="reference" />
+    </declare-styleable>
+
+
+</resources>
