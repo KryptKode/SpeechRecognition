@@ -7,4 +7,13 @@
     <string name="digits_caption">To try recognition of digits: say something like \"one two three four five\".</string>
     <string name="forecast_caption">To try recognition of a weather forecast like \"sunny spells on Wednesday\".</string>
     <string name="phone_caption">To try phonetic recognition say anything.</string>
+    <string name="info">Info</string>
+    <string name="info_msg">Are you sure you want to continue?</string>
+    <string name="allow_phone">Allow Permission</string>
+    <string name="allow_phone_msg">For the app to make phone calls for you, allow the permission</string>
+    <string name="call_permission_denied">Permission denied to allow the app make calls, please allow</string>
+    <string name="call_permission_never_ask">To use this feature, allow the call  permission in settings</string>
+    <string name="error_occurred">An error occurred</string>
+
+
 </resources>

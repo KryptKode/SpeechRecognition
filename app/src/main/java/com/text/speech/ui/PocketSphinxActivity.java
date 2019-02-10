@@ -1,4 +1,4 @@
-package com.text.speech;
+package com.text.speech.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.text.speech.R;
 
 import java.io.File;
 import java.io.IOException;

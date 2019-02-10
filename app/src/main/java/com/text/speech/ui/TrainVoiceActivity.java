@@ -1,4 +1,4 @@
-package com.text.speech;
+package com.text.speech.ui;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.text.speech.R;
 import com.text.speech.media.Player;
 
 import java.io.IOException;

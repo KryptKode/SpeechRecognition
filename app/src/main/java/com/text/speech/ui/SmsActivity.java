@@ -1,4 +1,4 @@
-package com.text.speech;
+package com.text.speech.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,38 +8,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class CallActivity extends AppCompatActivity {
-    Button btn1;
+import com.text.speech.R;
 
+public class SmsActivity extends AppCompatActivity {
+Button btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_call);
-        btn1 = (Button) findViewById(R.id.button1);
+        setContentView(R.layout.activity_sms);
+        btn2= (Button)findViewById(R.id.button2);
 
-        btn1.setOnClickListener(new View.OnClickListener(){
+        btn2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("content://contacts/people"));
+                Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:"));
                 startActivity(i);
             }
         });
 
-        if (getSupportActionBar() != null) {
+
+        if(getSupportActionBar()!=null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() ==android.R.id.home) {
+            finish ();
             return true;
         }
         return
-                super.onOptionsItemSelected(item);}
-    
-
+                super.onOptionsItemSelected(item);
     }
-
-
+}

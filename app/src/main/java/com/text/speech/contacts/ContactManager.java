@@ -9,12 +9,14 @@ import com.text.speech.contacts.data.Query;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class ContactManager {
 
     public Observable<List<Contact>> getAllContacts(){
-        return Observable.fromCallable(this::getContacts).subscribeOn(Schedulers.io());
+        return Observable.fromCallable(this::getContacts).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private List<Contact> getContacts() {

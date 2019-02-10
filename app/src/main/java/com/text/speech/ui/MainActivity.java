@@ -1,4 +1,4 @@
-package com.text.speech;
+package com.text.speech.ui;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import android.os.Bundle;
 import android.view.View;
 
+import com.text.speech.R;
 import com.text.speech.media.Player;
 
 public class MainActivity extends AppCompatActivity {

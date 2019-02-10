@@ -6,7 +6,7 @@
     android:weightSum="5"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TrainVoiceActivity">
+    tools:context=".ui.TrainVoiceActivity">
 
 
     <TextView

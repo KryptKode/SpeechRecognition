@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
-    tools:context="ChooseActionActivity">
+    tools:context=".ui.ChooseActionActivity">
     
     <LinearLayout
         android:id="@+id/root_call"
