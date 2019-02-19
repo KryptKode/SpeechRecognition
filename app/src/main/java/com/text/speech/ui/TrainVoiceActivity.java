@@ -25,9 +25,6 @@ public class TrainVoiceActivity extends AppCompatActivity {
     private Player player;
     private Repository repository;
 
-    private PocketSphinxUtil pocketSphinxUtil = new PocketSphinxUtil();
-    private CompositeDisposable disposable = new CompositeDisposable();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
