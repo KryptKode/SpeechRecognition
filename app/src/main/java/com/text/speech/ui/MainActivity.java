@@ -17,7 +17,7 @@ import com.text.speech.media.Player;
 import com.text.speech.utils.ToolTipUtils;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String WELCOME_FILE = "please train your voice in the next screen.3gpp";
+
     private Player player;
 
     @Override
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_main);
             try {
-                player = Player.getInstance(this, WELCOME_FILE);
+                player = Player.getInstance(this, Player.WELCOME_FILE);
                 player.play();
             } catch (IOException e) {
                 e.printStackTrace();
