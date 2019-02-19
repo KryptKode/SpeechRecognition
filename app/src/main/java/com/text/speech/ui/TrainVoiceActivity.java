@@ -9,21 +9,27 @@ import io.reactivex.disposables.CompositeDisposable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.text.speech.R;
 import com.text.speech.data.AppRepository;
 import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
+import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.utils.PocketSphinxUtil;
 
 import java.io.IOException;
 
 
-public class TrainVoiceActivity extends AppCompatActivity {
+public class TrainVoiceActivity extends BaseActivity {
 
-    private Player player;
+
     private Repository repository;
+    private ProgressBar progressBar;
+    private Button button;
+    private TextView doneTextView;
+    private TextView textView;
 
 
     @Override
@@ -31,16 +37,12 @@ public class TrainVoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_voice);
         repository = new AppRepository(this);
-        final Button button = (Button) findViewById(R.id.btn_done);
-        final TextView doneTextView = (TextView) findViewById(R.id.tv_word);
-        final TextView textView = (TextView) findViewById(R.id.tv_title);
+        button = (Button) findViewById(R.id.btn_done);
+        doneTextView = (TextView) findViewById(R.id.tv_word);
+        textView = (TextView) findViewById(R.id.tv_title);
+        progressBar = findViewById(R.id.progress_bar);
 
-
-        try {
-            player = Player.getInstance(this, Player.TRAIN_YOUR_VOICE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        playSound(Player.TRAIN_YOUR_VOICE);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -49,21 +51,17 @@ public class TrainVoiceActivity extends AppCompatActivity {
                 startChooseActionActivity();
             }
         });
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(R.string.voice_training_complete);
-                button.setVisibility(View.VISIBLE);
-                repository.updateSetUp(true);
-                try {
-                    player = Player.getInstance(TrainVoiceActivity.this, Player.VOICE_TRAINING_COMPLETE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                doneTextView.setVisibility(View.GONE);
-            }
-        };
-        new Handler().postDelayed(runnable, 5000);
+
+
+        initRecognizerWithPermissionCheck();
+    }
+
+    private void voiceTrainingComplete() {
+        textView.setText(R.string.voice_training_complete);
+        button.setVisibility(View.VISIBLE);
+        repository.updateSetUp(true);
+        playSound(Player.VOICE_TRAINING_COMPLETE);
+        doneTextView.setVisibility(View.GONE);
     }
 
     private void startChooseActionActivity() {
@@ -72,11 +70,14 @@ public class TrainVoiceActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (player != null) {
-            player.destroy();
-        }
+    protected void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 }

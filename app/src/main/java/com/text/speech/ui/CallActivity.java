@@ -17,10 +17,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.text.speech.R;
 import com.text.speech.contacts.ContactManager;
 import com.text.speech.contacts.data.Contact;
+import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.PhoneCallUtils;
@@ -29,18 +31,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RuntimePermissions
-public class CallActivity extends AppCompatActivity {
+public class CallActivity extends BaseActivity {
     private static final String TAG = "CallActivity";
     private Button btn1;
     private ContactManager contactManager = new ContactManager();
     private CompositeDisposable disposable = new CompositeDisposable();
     private List<Contact> contactList = new ArrayList<>();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         btn1 = (Button) findViewById(R.id.button1);
+        progressBar = findViewById(R.id.progress_bar);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +120,16 @@ public class CallActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         CallActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @Override
+    protected void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
 

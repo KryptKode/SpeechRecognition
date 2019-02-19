@@ -9,45 +9,54 @@ import java.io.IOException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.text.speech.R;
 import com.text.speech.data.AppRepository;
 import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
+import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.utils.ToolTipUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private Player player;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Repository repository = new AppRepository(this);
+       /* Repository repository = new AppRepository(this);
         if (repository.isSetUpComplete()) {
             Intent intent = new Intent(this, ChooseActionActivity.class);
             startActivity(intent);
             finish();
         } else {
-            setContentView(R.layout.activity_main);
-            try {
-                player = Player.getInstance(this, Player.WELCOME_FILE);
-                player.play();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Button button = findViewById(R.id.button);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickProceed(v);
-                }
-            });
+            init();
+        }*/
+       init();
+    }
 
-            ToolTipUtils tipUtils = new ToolTipUtils();
-            tipUtils.showToolTip(this, button, findViewById(R.id.main_root), getString(R.string.train_your_voice_title_text));
+    private void init() {
+        setContentView(R.layout.activity_main);
+        progressBar = findViewById(R.id.progress_bar);
+        try {
+            player = Player.getInstance(this, Player.WELCOME_FILE);
+            player.play();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickProceed(v);
+            }
+        });
+
+        ToolTipUtils tipUtils = new ToolTipUtils();
+        tipUtils.showToolTip(this, button, findViewById(R.id.main_root), getString(R.string.train_your_voice_title_text));
     }
 
     public void onClickProceed(View view) {
@@ -68,6 +77,16 @@ public class MainActivity extends AppCompatActivity {
         if (player != null) {
             player.destroy();
         }
+    }
+
+    @Override
+    protected void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
 

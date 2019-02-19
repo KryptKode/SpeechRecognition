@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.text.speech.R;
+import com.text.speech.media.Player;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.PocketSphinxUtil;
@@ -31,10 +32,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
     private PocketSphinxUtil pocketSphinxUtil = new PocketSphinxUtil();
     private CompositeDisposable disposable = new CompositeDisposable();
+
+    private Player player;
+
     private boolean isInitialized;
 
 
-    protected void initRecognizerWithPermissionCheck(){
+    protected void initRecognizerWithPermissionCheck() {
         BaseActivityPermissionsDispatcher.initRecognizerWithPermissionCheck(this);
     }
 
@@ -79,17 +83,21 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!disposable.isDisposed()){
+        if (!disposable.isDisposed()) {
             disposable.dispose();
         }
         pocketSphinxUtil.shutDown();
+
+        if (player != null) {
+            player.destroy();
+        }
     }
 
-    void startListening(){
+    void startListening() {
         pocketSphinxUtil.setListener(listener);
-        if(isInitialized){
+        if (isInitialized) {
             pocketSphinxUtil.startListening();
-        }else{
+        } else {
             NotificationUtils.notifyUser(this, "Speech recognizer not initialized");
         }
     }
@@ -110,7 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         @Override
         public void onError(Exception e) {
-            Log.e(TAG, "onError: ",e );
+            Log.e(TAG, "onError: ", e);
         }
 
         @Override
@@ -122,9 +130,18 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void handleErrors(Throwable e) {
         NotificationUtils.notifyUser(this, getString(R.string.error_occurred));
-        Log.e(TAG, "onCreate: ",e );
+        Log.e(TAG, "onCreate: ", e);
         hideProgress();
         isInitialized = false;
+    }
+
+
+    protected void playSound(String fileName) {
+        try {
+            player = Player.getInstance(this, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected abstract void hideProgress();

@@ -19,10 +19,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.text.speech.R;
 import com.text.speech.contacts.ContactManager;
 import com.text.speech.contacts.data.Contact;
+import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.SmsUtils;
@@ -31,19 +33,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RuntimePermissions
-public class SmsActivity extends AppCompatActivity {
+public class SmsActivity extends BaseActivity {
     private static final String TAG = "SmsActivity";
     private Button btn2;
 
     private ContactManager contactManager = new ContactManager();
     private CompositeDisposable disposable = new CompositeDisposable();
     private List<Contact> contactList = new ArrayList<>();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
         btn2 = (Button) findViewById(R.id.button2);
+        progressBar = findViewById(R.id.progress_bar);
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,5 +129,15 @@ public class SmsActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         SmsActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
 
+    }
+
+    @Override
+    protected void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
