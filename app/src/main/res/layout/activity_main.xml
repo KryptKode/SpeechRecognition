@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/main_root"
-    android:layout_margin="8dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"/>
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:gravity="center"
         android:layout_margin="8dp"
+        android:gravity="center"
+        android:text="Welcome"
         android:textColor="@color/colorPrimaryDark"
-        />
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/please_train_your_voice_in_the_next_screen"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:onClick="repeat"
-        android:gravity="center"
         android:layout_margin="8dp"
+        android:gravity="center"
+        android:onClick="repeat"
+        android:text="@string/please_train_your_voice_in_the_next_screen"
         android:textColor="@color/colorAccent"
-        />
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button"

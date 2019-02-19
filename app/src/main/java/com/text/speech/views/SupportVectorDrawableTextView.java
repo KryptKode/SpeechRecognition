@@ -25,9 +25,13 @@ import androidx.core.widget.TextViewCompat;
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class SupportVectorDrawableTextView extends AppCompatTextView {
+
+
     public SupportVectorDrawableTextView(Context context) {
         super(context);
+
     }
+
 
     public SupportVectorDrawableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

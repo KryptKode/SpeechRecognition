@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.reactivex.disposables.CompositeDisposable;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.text.speech.R;
 import com.text.speech.data.AppRepository;
 import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
+import com.text.speech.utils.PocketSphinxUtil;
 
 import java.io.IOException;
 
@@ -22,6 +24,9 @@ public class TrainVoiceActivity extends AppCompatActivity {
 
     private Player player;
     private Repository repository;
+
+    private PocketSphinxUtil pocketSphinxUtil = new PocketSphinxUtil();
+    private CompositeDisposable disposable = new CompositeDisposable();
 
 
     @Override

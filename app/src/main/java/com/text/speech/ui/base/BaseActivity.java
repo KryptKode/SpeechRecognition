@@ -1,9 +1,19 @@
-package com.text.speech.ui;
+package com.text.speech.ui.base;
 
 import android.Manifest;
-import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.text.speech.R;
+import com.text.speech.ui.dialogs.InfoConfirmDialog;
+import com.text.speech.utils.NotificationUtils;
+import com.text.speech.utils.PocketSphinxUtil;
+
+import java.io.File;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import edu.cmu.pocketsphinx.Assets;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -16,40 +26,17 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-
-import com.text.speech.R;
-import com.text.speech.ui.dialogs.InfoConfirmDialog;
-import com.text.speech.utils.NotificationUtils;
-import com.text.speech.utils.PocketSphinxUtil;
-
-import java.io.File;
-import java.io.IOException;
-
 @RuntimePermissions
-public class ChooseActionActivity extends AppCompatActivity {
-    private static final String TAG = "ChooseActionActivity";
+public abstract class BaseActivity extends AppCompatActivity {
+    private static final String TAG = "BaseActivity";
     private PocketSphinxUtil pocketSphinxUtil = new PocketSphinxUtil();
     private CompositeDisposable disposable = new CompositeDisposable();
-    private ProgressBar progressBar;
     private boolean isInitialized;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_action);
-        if(getSupportActionBar()!=null){
-            getSupportActionBar().setTitle(getString(R.string.choose_action));
-        }
-        progressBar = findViewById(R.id.progress_bar);
 
-        ChooseActionActivityPermissionsDispatcher.initRecognizerWithPermissionCheck(this);
-
+    protected void initRecognizerWithPermissionCheck(){
+        BaseActivityPermissionsDispatcher.initRecognizerWithPermissionCheck(this);
     }
-
 
     @NeedsPermission({Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void initRecognizer() {
@@ -89,31 +76,6 @@ public class ChooseActionActivity extends AppCompatActivity {
     }
 
 
-
-    private void handleErrors(Throwable e) {
-        NotificationUtils.notifyUser(this, getString(R.string.error_occurred));
-        Log.e(TAG, "onCreate: ",e );
-        hideProgress();
-        isInitialized = false;
-    }
-
-    private void hideProgress() {
-        progressBar.setVisibility(View.GONE);
-    }
-
-    private void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    public void onClickCall(View view){
-        Intent intent = new Intent(this,CallActivity.class);
-        startActivity(intent);
-    }
-    public void onClickSms(View view){
-        Intent intent = new Intent(this,SmsActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -135,9 +97,8 @@ public class ChooseActionActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ChooseActionActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        BaseActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
-
 
 
     private PocketSphinxUtil.Listener listener = new PocketSphinxUtil.Listener() {
@@ -154,7 +115,20 @@ public class ChooseActionActivity extends AppCompatActivity {
 
         @Override
         public void onResult(String hypothesis) {
-            NotificationUtils.notifyUser(ChooseActionActivity.this, "Recognized: " + hypothesis);
+            NotificationUtils.notifyUser(BaseActivity.this, "Recognized: " + hypothesis);
         }
     };
+
+
+    private void handleErrors(Throwable e) {
+        NotificationUtils.notifyUser(this, getString(R.string.error_occurred));
+        Log.e(TAG, "onCreate: ",e );
+        hideProgress();
+        isInitialized = false;
+    }
+
+    protected abstract void hideProgress();
+
+    protected abstract void showProgress();
+
 }

@@ -10,7 +10,7 @@
     tools:context=".ui.ChooseActionActivity"
     tools:ignore="UnusedAttribute">
 
-    <com.text.speech.views.SupportVectorDrawableTextView
+   <!-- <com.text.speech.views.SupportVectorDrawableTextView
         android:id="@+id/tv_call"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_call"
         app:layout_constraintTop_toTopOf="parent"
-        app:tv_DrawableTopCompat="@drawable/ic_sms" />
+        app:tv_DrawableTopCompat="@drawable/ic_sms" />-->
 
     <ProgressBar
         android:id="@+id/progress_bar"
