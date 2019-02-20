@@ -20,63 +20,50 @@ import com.text.speech.utils.ToolTipUtils;
 
 public class MainActivity extends BaseActivity {
 
-    private Player player;
+
     private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       /* Repository repository = new AppRepository(this);
+        Repository repository = new AppRepository(this);
         if (repository.isSetUpComplete()) {
             Intent intent = new Intent(this, ChooseActionActivity.class);
             startActivity(intent);
             finish();
         } else {
             init();
-        }*/
-       init();
+        }
+
     }
 
     private void init() {
         setContentView(R.layout.activity_main);
         progressBar = findViewById(R.id.progress_bar);
-        try {
-            player = Player.getInstance(this, Player.WELCOME_FILE);
-            player.play();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        playSound(Player.WELCOME_FILE);
         Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        button.setVisibility(View.GONE);
+        getPlayer().setListener(new Player.PlayerListener() {
             @Override
-            public void onClick(View v) {
-                onClickProceed(v);
+            public void onPlayEnd() {
+                onClickProceed();
             }
         });
 
-        ToolTipUtils tipUtils = new ToolTipUtils();
-        tipUtils.showToolTip(this, button, findViewById(R.id.main_root), getString(R.string.train_your_voice_title_text));
+       /* ToolTipUtils tipUtils = new ToolTipUtils();
+        tipUtils.showToolTip(this, button, findViewById(R.id.main_root), getString(R.string.train_your_voice_title_text));*/
     }
 
-    public void onClickProceed(View view) {
+    public void onClickProceed() {
         Intent intent = new Intent(this, TrainVoiceActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void repeat(View view) {
-        if (player != null) {
-            player.play();
-        }
-    }
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (player != null) {
-            player.destroy();
-        }
+    protected void handleResult(String hypothesis) {
+
     }
 
     @Override

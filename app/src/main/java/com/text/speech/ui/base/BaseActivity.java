@@ -38,6 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     private boolean isInitialized;
 
 
+    public Player getPlayer() {
+        return player;
+    }
+
     protected void initRecognizerWithPermissionCheck() {
         BaseActivityPermissionsDispatcher.initRecognizerWithPermissionCheck(this);
     }
@@ -123,9 +127,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         @Override
         public void onResult(String hypothesis) {
+            handleResult(hypothesis);
             NotificationUtils.notifyUser(BaseActivity.this, "Recognized: " + hypothesis);
         }
     };
+
+    protected abstract void handleResult(String hypothesis);
 
 
     private void handleErrors(Throwable e) {
@@ -141,6 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             player = Player.getInstance(this, fileName);
         } catch (IOException e) {
             e.printStackTrace();
+            NotificationUtils.notifyUser(this, getString(R.string.error_occurred) );
         }
     }
 

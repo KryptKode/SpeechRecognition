@@ -18,6 +18,7 @@ import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.utils.PocketSphinxUtil;
+import com.text.speech.utils.WordUtils;
 
 import java.io.IOException;
 
@@ -45,6 +46,7 @@ public class TrainVoiceActivity extends BaseActivity {
         playSound(Player.TRAIN_YOUR_VOICE);
 
 
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +64,12 @@ public class TrainVoiceActivity extends BaseActivity {
         repository.updateSetUp(true);
         playSound(Player.VOICE_TRAINING_COMPLETE);
         doneTextView.setVisibility(View.GONE);
+        getPlayer().setListener(new Player.PlayerListener() {
+            @Override
+            public void onPlayEnd() {
+                startChooseActionActivity();
+            }
+        });
     }
 
     private void startChooseActionActivity() {
@@ -70,6 +78,15 @@ public class TrainVoiceActivity extends BaseActivity {
         finish();
     }
 
+
+    @Override
+    protected void handleResult(String hypothesis) {
+        if(hypothesis.contains(WordUtils.HELLO)){
+            voiceTrainingComplete();
+        }else{
+            playSound(Player.REPEAT);
+        }
+    }
 
     @Override
     protected void hideProgress() {

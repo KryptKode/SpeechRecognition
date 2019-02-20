@@ -123,6 +123,11 @@ public class CallActivity extends BaseActivity {
     }
 
     @Override
+    protected void handleResult(String hypothesis) {
+
+    }
+
+    @Override
     protected void hideProgress() {
         progressBar.setVisibility(View.GONE);
     }
