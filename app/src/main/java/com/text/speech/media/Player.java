@@ -25,9 +25,14 @@ public class Player implements MediaPlayer.OnPreparedListener {
     private MediaPlayer mediaPlayer;
 
 
+    private boolean isPlaying;
     private boolean isReady;
 
     private PlayerListener listener;
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
 
     public void setListener(PlayerListener listener) {
         this.listener = listener;
@@ -50,6 +55,8 @@ public class Player implements MediaPlayer.OnPreparedListener {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                isPlaying = false;
+                destroy();
                 if (listener != null) {
                     listener.onPlayEnd();
                 }
@@ -67,6 +74,7 @@ public class Player implements MediaPlayer.OnPreparedListener {
 
     public void play() {
         if(isReady){
+            isPlaying = true;
             mediaPlayer.start();
         }
     }
@@ -81,9 +89,11 @@ public class Player implements MediaPlayer.OnPreparedListener {
     }
 
     public void destroy(){
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     public interface PlayerListener{

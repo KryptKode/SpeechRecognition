@@ -15,19 +15,23 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.text.speech.R;
 import com.text.speech.contacts.ContactManager;
 import com.text.speech.contacts.data.Contact;
+import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.SmsUtils;
+import com.text.speech.utils.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +56,21 @@ public class SmsActivity extends BaseActivity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(contactList.size() > 0){
-                    SmsActivityPermissionsDispatcher
-                            .sendSmsToPersonWithPermissionCheck(SmsActivity.this,
-                                    contactList.get(0).getPhoneNumbers().get(0).getNumber(),
-                                    "Hello world");
-                }else {
+                if (contactList.size() > 0) {
+                    for (Contact contact : contactList) {
+                        if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
+
+                            if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
+                                    || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP)
+                                    || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                                SmsActivityPermissionsDispatcher.sendSmsToPersonWithPermissionCheck(SmsActivity.this,
+                                        contact.getPhoneNumbers().get(0).getNumber(), WordUtils.THANK_YOU);
+                                NotificationUtils.notifyUser(SmsActivity.this, "SMS Sent");
+                                break;
+                            }
+                        }
+                    }
+                } else {
                     NotificationUtils.notifyUser(SmsActivity.this, "No number selected");
                 }
             }
@@ -67,6 +80,22 @@ public class SmsActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        playSound(Player.WHO_YOU_WANT_TO_MESSAGE);
+
+
+        getPlayer().setListener(new Player.PlayerListener() {
+            @Override
+            public void onPlayEnd() {
+                getPlayer().setListener(null);
+                initRecognizerWithPermissionCheck();
+            }
+        });
 
         SmsActivityPermissionsDispatcher.getContactsWithPermissionCheck(this);
     }
@@ -133,7 +162,23 @@ public class SmsActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
+        if (hypothesis.contains(WordUtils.TWO)) {
+            if (contactList.size() > 0) {
+                for (Contact contact : contactList) {
+                    if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
+                        if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
+                                || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP) || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                            SmsActivityPermissionsDispatcher.sendSmsToPersonWithPermissionCheck(SmsActivity.this,
+                                    contact.getPhoneNumbers().get(0).getNumber(), WordUtils.THANK_YOU);
+                            NotificationUtils.notifyUser(SmsActivity.this, "SMS Sent");
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
     }
 
     @Override

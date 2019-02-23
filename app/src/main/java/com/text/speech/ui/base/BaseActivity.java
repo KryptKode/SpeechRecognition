@@ -85,8 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         if (!disposable.isDisposed()) {
             disposable.dispose();
         }
@@ -96,6 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             player.destroy();
         }
     }
+
+
 
     void startListening() {
         pocketSphinxUtil.setListener(listener);
@@ -128,7 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onResult(String hypothesis) {
             handleResult(hypothesis);
-            NotificationUtils.notifyUser(BaseActivity.this, "Recognized: " + hypothesis);
+//            NotificationUtils.notifyUser(BaseActivity.this, "Recognized: " + hypothesis);
         }
     };
 

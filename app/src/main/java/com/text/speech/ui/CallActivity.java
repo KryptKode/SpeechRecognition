@@ -13,6 +13,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,13 @@ import android.widget.ProgressBar;
 import com.text.speech.R;
 import com.text.speech.contacts.ContactManager;
 import com.text.speech.contacts.data.Contact;
+import com.text.speech.contacts.data.PhoneNumber;
+import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.PhoneCallUtils;
+import com.text.speech.utils.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +53,24 @@ public class CallActivity extends BaseActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(contactList.size() > 0){
-                   CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
-                           contactList.get(0).getPhoneNumbers().get(0).getNumber());
-               }else{
-                   NotificationUtils.notifyUser(CallActivity.this, "No number selected");
-               }
+
+                if (contactList.size() > 0) {
+                    for (Contact contact : contactList) {
+                        if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
+
+                            if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
+                                    || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP)
+                                    || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                                CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
+                                        contact.getPhoneNumbers().get(0).getNumber());
+                                break;
+                            }
+                        }
+                    }
+
+                } else {
+                    NotificationUtils.notifyUser(CallActivity.this, "No number selected");
+                }
             }
         });
 
@@ -63,8 +79,22 @@ public class CallActivity extends BaseActivity {
         }
 
 
-        CallActivityPermissionsDispatcher.getContactsWithPermissionCheck(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        playSound(Player.WHO_YOU_WANT_TO_CALL);
+        getPlayer().setListener(new Player.PlayerListener() {
+            @Override
+            public void onPlayEnd() {
+                getPlayer().setListener(null);
+                initRecognizerWithPermissionCheck();
+            }
+        });
+
+        CallActivityPermissionsDispatcher.getContactsWithPermissionCheck(this);
     }
 
     @Override
@@ -124,7 +154,27 @@ public class CallActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
+        if (hypothesis.contains(WordUtils.HELLO)) {
+            if (contactList.size() > 0) {
+                for (Contact contact : contactList) {
+                    if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
+                        if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
+                                || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP) || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                            CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
+                                    contact.getPhoneNumbers().get(0).getNumber());
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }else{
+            if(!getPlayer().isPlaying()){
+                playSound(Player.REPEAT);
+
+            }
+        }
     }
 
     @Override

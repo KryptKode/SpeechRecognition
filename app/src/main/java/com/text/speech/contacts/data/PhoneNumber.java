@@ -87,7 +87,7 @@ public class PhoneNumber {
         }
     }
 
-    PhoneNumber(String number, Type type, String normalizedNumber) {
+    public PhoneNumber(String number, Type type, String normalizedNumber) {
         this.number = number;
         this.type = type;
         this.label = null;

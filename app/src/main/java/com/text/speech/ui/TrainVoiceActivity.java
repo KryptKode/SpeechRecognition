@@ -43,7 +43,6 @@ public class TrainVoiceActivity extends BaseActivity {
         textView = (TextView) findViewById(R.id.tv_title);
         progressBar = findViewById(R.id.progress_bar);
 
-        playSound(Player.TRAIN_YOUR_VOICE);
 
 
 
@@ -55,13 +54,27 @@ public class TrainVoiceActivity extends BaseActivity {
         });
 
 
-        initRecognizerWithPermissionCheck();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        playSound(Player.TRAIN_YOUR_VOICE);
+
+        getPlayer().setListener(new Player.PlayerListener() {
+            @Override
+            public void onPlayEnd() {
+                initRecognizerWithPermissionCheck();
+                getPlayer().setListener(null);
+            }
+        });
     }
 
     private void voiceTrainingComplete() {
         textView.setText(R.string.voice_training_complete);
         button.setVisibility(View.VISIBLE);
-        repository.updateSetUp(true);
+        repository.updateSetUp(false);
         playSound(Player.VOICE_TRAINING_COMPLETE);
         doneTextView.setVisibility(View.GONE);
         getPlayer().setListener(new Player.PlayerListener() {
@@ -84,7 +97,9 @@ public class TrainVoiceActivity extends BaseActivity {
         if(hypothesis.contains(WordUtils.HELLO)){
             voiceTrainingComplete();
         }else{
-            playSound(Player.REPEAT);
+            if(!getPlayer().isPlaying()){
+                playSound(Player.REPEAT);
+            }
         }
     }
 

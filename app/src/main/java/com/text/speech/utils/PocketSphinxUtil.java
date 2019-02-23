@@ -84,7 +84,11 @@ public class PocketSphinxUtil implements RecognitionListener {
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
         if (hypothesis != null) {
-            Log.d(TAG, "onPartialResult: HYP = " + hypothesis.getHypstr());
+            Log.i(TAG, "onResult: "+ hypothesis.getHypstr());
+            if (listener != null) {
+                listener.onResult(hypothesis.getHypstr());
+            }
+
         }
     }
 

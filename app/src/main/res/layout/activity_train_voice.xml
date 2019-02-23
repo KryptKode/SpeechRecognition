@@ -60,7 +60,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textStyle="bold"
-        android:visibility="gone"
+        android:layout_marginBottom="@dimen/ld_side_margin"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
         android:background="@drawable/rectangle_round_corners_purple"
         android:text="Done"/>
 
