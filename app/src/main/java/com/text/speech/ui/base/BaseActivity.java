@@ -2,6 +2,7 @@ package com.text.speech.ui.base;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.text.speech.R;
@@ -99,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-    void startListening() {
+  protected void startListening() {
         pocketSphinxUtil.setListener(listener);
         if (isInitialized) {
             pocketSphinxUtil.startListening();
@@ -119,7 +120,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onTimeOut() {
             Log.d(TAG, "onTimeOut: ");
-            startListening();
+            new Handler().postDelayed(() -> startListening(), 1000);
+
         }
 
         @Override

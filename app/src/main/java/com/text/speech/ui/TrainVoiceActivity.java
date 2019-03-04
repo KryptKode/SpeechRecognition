@@ -100,6 +100,8 @@ public class TrainVoiceActivity extends BaseActivity {
             if(!getPlayer().isPlaying()){
                 playSound(Player.REPEAT);
             }
+            startListening();
+
         }
     }
 

@@ -49,7 +49,7 @@ public class PocketSphinxUtil implements RecognitionListener {
 
         // Create language model search
         File languageModel = new File(assetsDir, "igbo.lm.dmp");
-        recognizer.addNgramSearch(IGBO, languageModel);
+        recognizer.addNgramSearch( IGBO, languageModel);
 
     }
 
@@ -79,17 +79,21 @@ public class PocketSphinxUtil implements RecognitionListener {
     @Override
     public void onEndOfSpeech() {
         Log.d(TAG, "onEndOfSpeech: ");
+        recognizer.stop();
     }
 
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
         if (hypothesis != null) {
+            Log.i(TAG, "onPartialResult: "+ hypothesis.getHypstr());
+        }
+       /* if (hypothesis != null) {
             Log.i(TAG, "onResult: "+ hypothesis.getHypstr());
             if (listener != null) {
                 listener.onResult(hypothesis.getHypstr());
             }
 
-        }
+        }*/
     }
 
     @Override
