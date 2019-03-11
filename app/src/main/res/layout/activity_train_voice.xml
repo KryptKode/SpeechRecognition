@@ -52,6 +52,14 @@
         android:text="Say Hello"/>
 
 
+    <TextView
+        android:id="@+id/tv_logs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        tools:text="Log"/>
 
 
     <Button
@@ -60,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textStyle="bold"
-        android:layout_marginBottom="@dimen/ld_side_margin"
+        android:layout_marginBottom="8dp"
         android:textColor="@color/colorWhite"
         android:visibility="visible"
         android:background="@drawable/rectangle_round_corners_purple"

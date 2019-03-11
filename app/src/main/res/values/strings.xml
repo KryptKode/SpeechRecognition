@@ -34,6 +34,8 @@
     <string name="make_a_call">Make a call</string>
     <string name="voice_icon">Voice Icon</string>
     <string name="voice_training_complete">Voice training complete...</string>
+    <string name="speech_ended">Speech ended</string>
+    <string name="speech_started">Speech Started</string>
 
 
 </resources>

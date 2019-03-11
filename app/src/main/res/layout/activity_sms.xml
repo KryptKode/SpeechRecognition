@@ -49,6 +49,15 @@
         android:textColor="@color/colorAccent"
         android:textSize="22sp"/>
 
+    <TextView
+        android:id="@+id/tv_logs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        tools:text="Log"/>
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"

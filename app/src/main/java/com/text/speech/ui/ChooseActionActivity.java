@@ -17,9 +17,11 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.text.speech.R;
 import com.text.speech.media.Player;
@@ -36,6 +38,8 @@ import java.io.IOException;
 public class ChooseActionActivity extends BaseActivity {
     private static final String TAG = "ChooseActionActivity";
     private ProgressBar progressBar;
+    private TextView logTextView;
+    private boolean handled; //used to prevent the app from starting recognition after the right word has been identified
 
 
     @Override
@@ -46,35 +50,90 @@ public class ChooseActionActivity extends BaseActivity {
             getSupportActionBar().setTitle(getString(R.string.choose_action));
         }
         progressBar = findViewById(R.id.progress_bar);
+        logTextView = findViewById(R.id.tv_logs);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        handled = false;
         playSound(Player.PHONE_CALL_SAY_2);
         getPlayer().setListener(new Player.PlayerListener() {
             @Override
             public void onPlayEnd() {
-                playSound(Player.SEND_AN_SMS_SAY_TWO);
-                getPlayer().setListener(null);
-                initRecognizerWithPermissionCheck();
+                initRecognizerWithPermissionCheckTimeout(PocketSphinxUtil.ONE);
             }
         });
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     protected void handleResult(String hypothesis) {
-        if(hypothesis.contains(WordUtils.ONE)){
+        if (hypothesis.equals(WordUtils.ONE)) {
             onClickCall(null);
-        }else if(hypothesis.contains(WordUtils.TWO)){
+        } else if (hypothesis.equals(WordUtils.TWO)) {
             onClickSms(null);
-        }else{
-            if(!getPlayer().isPlaying()){
+        } else {
+            if (!getPlayer().isPlaying()) {
+
                 playSound(Player.REPEAT);
+                startListeningWithTimeout(getPocketSphinxUtil().getRecognizer().getSearchName());
+            }
+        }
+    }
+
+    @Override
+    protected void handleTimeOut() {
+        Log.i(TAG, "handleTimeOut: ");
+        if(getPocketSphinxUtil().getRecognizer().getSearchName().equals(PocketSphinxUtil.ONE)){
+            if (!getPlayer().isPlaying()) {
+                playSound(Player.SEND_AN_SMS_SAY_TWO);
+                getPlayer().setListener(new Player.PlayerListener() {
+                    @Override
+                    public void onPlayEnd() {
+                        startListeningWithTimeout(PocketSphinxUtil.TWO);
+                    }
+                });
+
+            }
+        }else{
+            if (!getPlayer().isPlaying()) {
+                playSound(Player.PHONE_CALL_SAY_2);
+                getPlayer().setListener(new Player.PlayerListener() {
+                    @Override
+                    public void onPlayEnd() {
+                        startListeningWithTimeout(PocketSphinxUtil.ONE);
+                    }
+                });
 
             }
         }
+    }
+
+    @Override
+    protected void handleEndSpeech() {
+        new Handler().postDelayed(() ->{
+            if(!handled){
+                startListeningWithTimeout(getPocketSphinxUtil().getRecognizer().getSearchName());
+            }
+            }, 1000);
+
+        logTextView.setText(R.string.speech_ended);
+        new Handler().postDelayed(()->{
+            logTextView.setText("");
+        }, 2000);
+        Log.i(TAG, "handleEndSpeech: ");
+    }
+
+    @Override
+    protected void handleStartSpeech() {
+        logTextView.setText(R.string.speech_started);
     }
 
     @Override
@@ -88,11 +147,13 @@ public class ChooseActionActivity extends BaseActivity {
     }
 
     public void onClickCall(View view) {
+        handled = true;
         Intent intent = new Intent(this, CallActivity.class);
         startActivity(intent);
     }
 
     public void onClickSms(View view) {
+        handled = true;
         Intent intent = new Intent(this, SmsActivity.class);
         startActivity(intent);
     }

@@ -190,7 +190,7 @@ public class PocketSphinxActivity extends Activity implements
 
         recognizer = SpeechRecognizerSetup.defaultSetup()
                 .setAcousticModel(new File(assetsDir, "en-us-ptm"))
-                .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
+                .setDictionary(new File(assetsDir, "igbo.dict"))
 
                 .setRawLogDir(assetsDir) // To disable logging of raw audio comment out this call (takes a lot of space on the device)
 
@@ -213,7 +213,7 @@ public class PocketSphinxActivity extends Activity implements
         recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
 
         // Create language model search
-        File languageModel = new File(assetsDir, "weather.dmp");
+        File languageModel = new File(assetsDir, "igbo.lm.dmp");
         recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
 
         // Phonetic search

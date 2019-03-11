@@ -1,20 +1,8 @@
 package com.text.speech.ui;
 
 import android.Manifest;
-import android.content.Intent;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.disposables.CompositeDisposable;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
-
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,11 +18,21 @@ import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
+import com.text.speech.utils.PocketSphinxUtil;
 import com.text.speech.utils.SmsUtils;
 import com.text.speech.utils.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
 public class SmsActivity extends BaseActivity {
@@ -45,6 +43,8 @@ public class SmsActivity extends BaseActivity {
     private CompositeDisposable disposable = new CompositeDisposable();
     private List<Contact> contactList = new ArrayList<>();
     private ProgressBar progressBar;
+    private TextView logTextView;
+    private boolean handled; //used to prevent the app from starting recognition after the right word has been identified
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +52,34 @@ public class SmsActivity extends BaseActivity {
         setContentView(R.layout.activity_sms);
         btn2 = (Button) findViewById(R.id.button2);
         progressBar = findViewById(R.id.progress_bar);
+        logTextView = findViewById(R.id.tv_logs);
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onClick: " + contactList.size());
                 if (contactList.size() > 0) {
                     for (Contact contact : contactList) {
                         if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
-                            if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
-                                    || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP)
-                                    || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                            if (contact.getDisplayName().toLowerCase().contains(WordUtils.TWO)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.HELLO)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.ONE)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.STOP)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.THANK_YOU)) {
+                                Log.i(TAG, "onClick: Match found " + contact);
                                 SmsActivityPermissionsDispatcher.sendSmsToPersonWithPermissionCheck(SmsActivity.this,
-                                        contact.getPhoneNumbers().get(0).getNumber(), WordUtils.THANK_YOU);
-                                NotificationUtils.notifyUser(SmsActivity.this, "SMS Sent");
+                                        contact.getPhoneNumbers().get(0).getNumber(), "Abuo daalu");
+                                NotificationUtils.notifyUser(SmsActivity.this, "Sms sending...");
                                 break;
+                            } else {
+                                Log.i(TAG, "handleResult: No name match:  " + contact.getDisplayName());
                             }
+                        } else {
+                            Log.i(TAG, "handleResult: Contact name is null");
                         }
                     }
+
                 } else {
                     NotificationUtils.notifyUser(SmsActivity.this, "No number selected");
                 }
@@ -86,6 +96,7 @@ public class SmsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        handled = false;
         playSound(Player.WHO_YOU_WANT_TO_MESSAGE);
 
 
@@ -93,7 +104,7 @@ public class SmsActivity extends BaseActivity {
             @Override
             public void onPlayEnd() {
                 getPlayer().setListener(null);
-                initRecognizerWithPermissionCheck();
+                initRecognizerWithPermissionCheck(PocketSphinxUtil.STOP);
             }
         });
 
@@ -162,23 +173,65 @@ public class SmsActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
-        if (hypothesis.contains(WordUtils.TWO)) {
+        Log.i(TAG, "handleResult: " + hypothesis);
+        if (hypothesis.equals(WordUtils.STOP)) {
+            handled = true;
             if (contactList.size() > 0) {
                 for (Contact contact : contactList) {
                     if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
-                        if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
-                                || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP) || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                        if (contact.getDisplayName().toLowerCase().contains(WordUtils.TWO)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.HELLO)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.ONE)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.STOP)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.THANK_YOU)) {
+
+                            Log.i(TAG, "onClick: Match found " + contact);
                             SmsActivityPermissionsDispatcher.sendSmsToPersonWithPermissionCheck(SmsActivity.this,
-                                    contact.getPhoneNumbers().get(0).getNumber(), WordUtils.THANK_YOU);
-                            NotificationUtils.notifyUser(SmsActivity.this, "SMS Sent");
+                                    contact.getPhoneNumbers().get(0).getNumber(), "Abuo daalu");
+                            NotificationUtils.notifyUser(SmsActivity.this, "Sms sending...");
                             break;
+                        } else {
+                            Log.i(TAG, "handleResult: No name match:  " + contact.getDisplayName());
                         }
+                    } else {
+                        Log.i(TAG, "handleResult: Contact name is null");
                     }
                 }
             }
 
+        } else {
+            if (!getPlayer().isPlaying()) {
+                playSound(Player.REPEAT);
+            }
+
+            startListening(PocketSphinxUtil.STOP);
         }
+    }
+
+    @Override
+    protected void handleEndSpeech() {
+        new Handler().postDelayed(() ->{
+            if(!handled){
+                startListeningWithTimeout(getPocketSphinxUtil().getRecognizer().getSearchName());
+            }
+        }, 1000);
+
+        logTextView.setText(R.string.speech_ended);
+        new Handler().postDelayed(()->{
+            logTextView.setText("");
+        }, 2000);
+        Log.i(TAG, "handleEndSpeech: ");
+    }
+
+    @Override
+    protected void handleStartSpeech() {
+        logTextView.setText(R.string.speech_started);
+    }
+
+    @Override
+    protected void handleTimeOut() {
+        new Handler().postDelayed(() -> startListening(PocketSphinxUtil.STOP), 1000);
     }
 
     @Override

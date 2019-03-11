@@ -353,4 +353,24 @@ public final class Contact {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "id=" + id +
+                ", displayName='" + displayName + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", phoneNumbers=" + phoneNumbers +
+                ", photoUri='" + photoUri + '\'' +
+                ", emails=" + emails +
+                ", events=" + events +
+                ", companyName='" + companyName + '\'' +
+                ", companyTitle='" + companyTitle + '\'' +
+                ", websites=" + websites +
+                ", addresses=" + addresses +
+                ", note='" + note + '\'' +
+                ", selected=" + selected +
+                '}';
+    }
 }

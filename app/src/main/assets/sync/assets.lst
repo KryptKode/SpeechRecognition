@@ -1,10 +1,9 @@
 igbo.dict
-igbo.lm
 igbo.lm.dmp
 igbo/feat.params
 igbo/mdef
 igbo/means
-igbo/mixture_weights
 igbo/noisedict
+igbo/sendump
 igbo/transition_matrices
 igbo/variances

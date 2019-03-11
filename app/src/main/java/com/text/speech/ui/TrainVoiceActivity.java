@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -21,16 +22,19 @@ import com.text.speech.utils.PocketSphinxUtil;
 import com.text.speech.utils.WordUtils;
 
 import java.io.IOException;
+import java.sql.Time;
 
 
 public class TrainVoiceActivity extends BaseActivity {
-
+    private static final String TAG = "TrainVoiceActivity";
 
     private Repository repository;
     private ProgressBar progressBar;
     private Button button;
     private TextView doneTextView;
     private TextView textView;
+
+    private TextView logTextView;
 
 
     @Override
@@ -42,8 +46,7 @@ public class TrainVoiceActivity extends BaseActivity {
         doneTextView = (TextView) findViewById(R.id.tv_word);
         textView = (TextView) findViewById(R.id.tv_title);
         progressBar = findViewById(R.id.progress_bar);
-
-
+        logTextView = findViewById(R.id.tv_logs);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +68,12 @@ public class TrainVoiceActivity extends BaseActivity {
         getPlayer().setListener(new Player.PlayerListener() {
             @Override
             public void onPlayEnd() {
-                initRecognizerWithPermissionCheck();
+                initRecognizerWithPermissionCheck(PocketSphinxUtil.HELLO);
                 getPlayer().setListener(null);
             }
         });
+
+
     }
 
     private void voiceTrainingComplete() {
@@ -94,15 +99,39 @@ public class TrainVoiceActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
-        if(hypothesis.contains(WordUtils.HELLO)){
+        if(hypothesis.equals(WordUtils.HELLO)){
             voiceTrainingComplete();
         }else{
             if(!getPlayer().isPlaying()){
                 playSound(Player.REPEAT);
             }
-            startListening();
+            startListening(PocketSphinxUtil.THANK_YOU);
 
         }
+       /* if(hypothesis.equals(WordUtils.HELLO)){
+            Log.i(TAG, "handleResult: RECOGNIZED ");
+        }
+        startListening(PocketSphinxUtil.HELLO);*/
+    }
+
+    @Override
+    protected void handleTimeOut() {
+//        new Handler().postDelayed(() -> startListening(PocketSphinxUtil.HELLO), 1000);
+    }
+
+    @Override
+    protected void handleEndSpeech() {
+//        new Handler().postDelayed(() -> startListening(PocketSphinxUtil.HELLO), 1000);
+        logTextView.setText(R.string.speech_ended);
+        new Handler().postDelayed(()->{
+            logTextView.setText("");
+        }, 2000);
+        startListening(PocketSphinxUtil.HELLO);
+    }
+
+    @Override
+    protected void handleStartSpeech() {
+        logTextView.setText(R.string.speech_started);
     }
 
     @Override

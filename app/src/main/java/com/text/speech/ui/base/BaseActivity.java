@@ -1,8 +1,6 @@
 package com.text.speech.ui.base;
 
 import android.Manifest;
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import com.text.speech.R;
@@ -15,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import edu.cmu.pocketsphinx.Assets;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,8 +40,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         return player;
     }
 
+    public PocketSphinxUtil getPocketSphinxUtil() {
+        return pocketSphinxUtil;
+    }
+
     protected void initRecognizerWithPermissionCheck() {
         BaseActivityPermissionsDispatcher.initRecognizerWithPermissionCheck(this);
+    }
+
+    protected void initRecognizerWithPermissionCheck(String keyword) {
+        BaseActivityPermissionsDispatcher.initRecognizerWithKeyWordWithPermissionCheck(this, keyword);
+    }
+
+    protected void initRecognizerWithPermissionCheckTimeout(String keyword) {
+        BaseActivityPermissionsDispatcher.initRecognizerWithKeyWordAndTimeoutWithPermissionCheck(this, keyword);
     }
 
     @NeedsPermission({Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE})
@@ -54,14 +63,56 @@ public abstract class BaseActivity extends AppCompatActivity {
             showProgress();
             Assets assets = new Assets(this);
             File assetDir = assets.syncAssets();
-            disposable.add(pocketSphinxUtil.init(assetDir)
-                    .subscribeOn(Schedulers.computation())
+            disposable.addAll(pocketSphinxUtil.init(assetDir)
+                    .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> {
                         hideProgress();
                         isInitialized = true;
                         Log.d(TAG, "onCreate: Recognizer initialization complete");
                         startListening();
+                    }, this::handleErrors));
+        } catch (IOException e) {
+            handleErrors(e);
+        }
+    }
+
+    @NeedsPermission({Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void initRecognizerWithKeyWord(String keyword) {
+        Log.d(TAG, "onCreate: Initializing recognizer...");
+        try {
+            showProgress();
+            Assets assets = new Assets(this);
+            File assetDir = assets.syncAssets();
+            disposable.addAll(pocketSphinxUtil.init(assetDir)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                        hideProgress();
+                        isInitialized = true;
+                        Log.d(TAG, "onCreate: Recognizer initialization complete");
+                        startListening(keyword);
+                    }, this::handleErrors));
+        } catch (IOException e) {
+            handleErrors(e);
+        }
+    }
+
+    @NeedsPermission({Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void initRecognizerWithKeyWordAndTimeout(String keyword) {
+        Log.d(TAG, "onCreate: Initializing recognizer...");
+        try {
+            showProgress();
+            Assets assets = new Assets(this);
+            File assetDir = assets.syncAssets();
+            disposable.addAll(pocketSphinxUtil.init(assetDir)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                        hideProgress();
+                        isInitialized = true;
+                        Log.d(TAG, "onCreate: Recognizer initialization complete");
+                        startListeningWithTimeout(keyword);
                     }, this::handleErrors));
         } catch (IOException e) {
             handleErrors(e);
@@ -88,9 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (!disposable.isDisposed()) {
-            disposable.dispose();
-        }
+
         pocketSphinxUtil.shutDown();
 
         if (player != null) {
@@ -99,14 +148,45 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!disposable.isDisposed()) {
+            disposable.dispose();
+        }
+    }
 
-  protected void startListening() {
+    protected void startListening() {
         pocketSphinxUtil.setListener(listener);
         if (isInitialized) {
             pocketSphinxUtil.startListening();
         } else {
             NotificationUtils.notifyUser(this, "Speech recognizer not initialized");
         }
+    }
+
+    protected void startListening(String keyword) {
+        pocketSphinxUtil.setListener(listener);
+        if (isInitialized) {
+            pocketSphinxUtil.startListening(keyword);
+        } else {
+            NotificationUtils.notifyUser(this, "Speech recognizer not initialized");
+        }
+    }
+
+
+    protected void startListeningWithTimeout(String keyword) {
+        pocketSphinxUtil.setListener(listener);
+        if (isInitialized) {
+            pocketSphinxUtil.startListeningWithTimeout(keyword);
+        } else {
+            NotificationUtils.notifyUser(this, "Speech recognizer not initialized");
+        }
+    }
+
+
+    protected void stopListening() {
+       pocketSphinxUtil.stopListening();
     }
 
     @Override
@@ -120,12 +200,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onTimeOut() {
             Log.d(TAG, "onTimeOut: ");
-            new Handler().postDelayed(() -> startListening(), 1000);
-
+            stopListening();
+            handleTimeOut();
+//            new Handler().postDelayed(() -> startListening(PocketSphinxUtil.THANK_YOU), 1000);
         }
 
         @Override
         public void onError(Exception e) {
+            stopListening();
+            handleEndSpeech();
+//            new Handler().postDelayed(() -> startListening(PocketSphinxUtil.THANK_YOU), 1000);
             Log.e(TAG, "onError: ", e);
         }
 
@@ -134,7 +218,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             handleResult(hypothesis);
 //            NotificationUtils.notifyUser(BaseActivity.this, "Recognized: " + hypothesis);
         }
+
+        @Override
+        public void onStartSpeech() {
+            handleStartSpeech();
+        }
+
+        @Override
+        public void onEndSpeech() {
+            handleEndSpeech();
+        }
     };
+
+    protected abstract void handleStartSpeech();
+
+    protected abstract void handleTimeOut();
+
+    protected abstract void handleEndSpeech();
 
     protected abstract void handleResult(String hypothesis);
 

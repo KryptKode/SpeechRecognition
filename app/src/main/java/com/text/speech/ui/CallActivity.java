@@ -13,12 +13,14 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.text.speech.R;
 import com.text.speech.contacts.ContactManager;
@@ -29,10 +31,12 @@ import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.PhoneCallUtils;
+import com.text.speech.utils.PocketSphinxUtil;
 import com.text.speech.utils.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 @RuntimePermissions
 public class CallActivity extends BaseActivity {
@@ -42,6 +46,8 @@ public class CallActivity extends BaseActivity {
     private CompositeDisposable disposable = new CompositeDisposable();
     private List<Contact> contactList = new ArrayList<>();
     private ProgressBar progressBar;
+    private TextView logTextView;
+    private boolean handled; //used to prevent the app from starting recognition after the right word has been identified
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class CallActivity extends BaseActivity {
         setContentView(R.layout.activity_call);
         btn1 = (Button) findViewById(R.id.button1);
         progressBar = findViewById(R.id.progress_bar);
+        logTextView = findViewById(R.id.tv_logs);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,18 +65,22 @@ public class CallActivity extends BaseActivity {
                     for (Contact contact : contactList) {
                         if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
-                            if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
-                                    || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP)
-                                    || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                            if (contact.getDisplayName().toLowerCase().contains(WordUtils.TWO)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.HELLO)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.ONE)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.STOP)
+                                    || contact.getDisplayName().toLowerCase().contains(WordUtils.THANK_YOU)) {
                                 CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
                                         contact.getPhoneNumbers().get(0).getNumber());
                                 break;
+                            }else{
+                                Log.i(TAG, "handleResult: No name match:  "+ contact.getDisplayName());
                             }
+                        }else{
+                            Log.i(TAG, "handleResult: Contact name is null");
                         }
                     }
 
-                } else {
-                    NotificationUtils.notifyUser(CallActivity.this, "No number selected");
                 }
             }
         });
@@ -85,12 +96,13 @@ public class CallActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        handled = false;
         playSound(Player.WHO_YOU_WANT_TO_CALL);
         getPlayer().setListener(new Player.PlayerListener() {
             @Override
             public void onPlayEnd() {
                 getPlayer().setListener(null);
-                initRecognizerWithPermissionCheck();
+                initRecognizerWithPermissionCheck(PocketSphinxUtil.THANK_YOU);
             }
         });
 
@@ -154,17 +166,26 @@ public class CallActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
-        if (hypothesis.contains(WordUtils.HELLO)) {
+        Log.i(TAG, "handleResult: " + hypothesis);
+        if (hypothesis.equals(WordUtils.THANK_YOU)) {
+            handled = true;
             if (contactList.size() > 0) {
                 for (Contact contact : contactList) {
                     if (contact != null && !TextUtils.isEmpty(contact.getDisplayName())) {
 
-                        if (contact.getDisplayName().contains(WordUtils.TWO) || contact.getDisplayName().contains(WordUtils.HELLO)
-                                || contact.getDisplayName().contains(WordUtils.ONE) || contact.getDisplayName().contains(WordUtils.STOP) || contact.getDisplayName().contains(WordUtils.THANK_YOU)) {
+                        if (contact.getDisplayName().toLowerCase().contains(WordUtils.TWO)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.HELLO)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.ONE)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.STOP)
+                                || contact.getDisplayName().toLowerCase().contains(WordUtils.THANK_YOU)) {
                             CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
                                     contact.getPhoneNumbers().get(0).getNumber());
                             break;
+                        }else{
+                            Log.i(TAG, "handleResult: No name match:  "+ contact.getDisplayName());
                         }
+                    }else{
+                        Log.i(TAG, "handleResult: Contact name is null");
                     }
                 }
 
@@ -172,9 +193,35 @@ public class CallActivity extends BaseActivity {
         }else{
             if(!getPlayer().isPlaying()){
                 playSound(Player.REPEAT);
-
             }
+
+            startListening(PocketSphinxUtil.THANK_YOU);
         }
+    }
+
+    @Override
+    protected void handleTimeOut() {
+        new Handler().postDelayed(() -> startListening(PocketSphinxUtil.THANK_YOU), 1000);
+    }
+
+    @Override
+    protected void handleEndSpeech() {
+        new Handler().postDelayed(() ->{
+            if(!handled){
+                startListeningWithTimeout(getPocketSphinxUtil().getRecognizer().getSearchName());
+            }
+        }, 1000);
+
+        logTextView.setText(R.string.speech_ended);
+        new Handler().postDelayed(()->{
+            logTextView.setText("");
+        }, 2000);
+        Log.i(TAG, "handleEndSpeech: ");
+    }
+
+    @Override
+    protected void handleStartSpeech() {
+        logTextView.setText(R.string.speech_started);
     }
 
     @Override

@@ -67,6 +67,22 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void handleTimeOut() {
+
+    }
+
+    @Override
+    protected void handleEndSpeech() {
+
+    }
+
+    @Override
+    protected void handleStartSpeech() {
+
+
+    }
+
+    @Override
     protected void hideProgress() {
         progressBar.setVisibility(View.GONE);
     }

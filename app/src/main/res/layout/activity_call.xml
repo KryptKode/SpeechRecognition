@@ -40,12 +40,23 @@
         android:text="who do you want to call"
         android:textSize="22sp" />
 
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="click me"
         android:id="@+id/button1"
         android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_logs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        tools:text="Log"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
