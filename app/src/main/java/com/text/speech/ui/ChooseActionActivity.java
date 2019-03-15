@@ -39,6 +39,7 @@ public class ChooseActionActivity extends BaseActivity {
     private static final String TAG = "ChooseActionActivity";
     private ProgressBar progressBar;
     private TextView logTextView;
+    private TextView promptTextView;
     private boolean handled; //used to prevent the app from starting recognition after the right word has been identified
 
 
@@ -51,7 +52,8 @@ public class ChooseActionActivity extends BaseActivity {
         }
         progressBar = findViewById(R.id.progress_bar);
         logTextView = findViewById(R.id.tv_logs);
-
+        promptTextView = findViewById(R.id.tv_word);
+        populateTable(getString(R.string.abuo_eng), getString(R.string.abuo), getString(R.string.abuo_phone));
     }
 
     @Override
@@ -63,6 +65,11 @@ public class ChooseActionActivity extends BaseActivity {
             @Override
             public void onPlayEnd() {
                 initRecognizerWithPermissionCheckTimeout(PocketSphinxUtil.TWO);
+            }
+
+            @Override
+            public void onPlayStart() {
+                promptTextView.setText(getString(R.string.say, getString(R.string.two)));
             }
         });
     }
@@ -99,6 +106,12 @@ public class ChooseActionActivity extends BaseActivity {
                     public void onPlayEnd() {
                         startListeningWithTimeout(PocketSphinxUtil.THREE);
                     }
+
+                    @Override
+                    public void onPlayStart() {
+                        promptTextView.setText(getString(R.string.say, getString(R.string.three)));
+                        populateTable(getString(R.string.ato_eng), getString(R.string.ato), getString(R.string.ato_phone));
+                    }
                 });
 
             }
@@ -109,6 +122,12 @@ public class ChooseActionActivity extends BaseActivity {
                     @Override
                     public void onPlayEnd() {
                         startListeningWithTimeout(PocketSphinxUtil.TWO);
+                    }
+
+                    @Override
+                    public void onPlayStart() {
+                        promptTextView.setText(getString(R.string.say, getString(R.string.two)));
+                        populateTable(getString(R.string.abuo_eng), getString(R.string.abuo), getString(R.string.abuo_phone));
                     }
                 });
 

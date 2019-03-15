@@ -49,6 +49,7 @@ public class TrainVoiceActivity extends BaseActivity {
         });
 
 
+        populateTable(getString(R.string.nnoo_eng), getString(R.string.nnoo), getString(R.string.nnoo_phone));
     }
 
 
@@ -62,6 +63,11 @@ public class TrainVoiceActivity extends BaseActivity {
             public void onPlayEnd() {
                 initRecognizerWithPermissionCheck(PocketSphinxUtil.HELLO);
                 getPlayer().setListener(null);
+            }
+
+            @Override
+            public void onPlayStart() {
+
             }
         });
 
@@ -77,6 +83,11 @@ public class TrainVoiceActivity extends BaseActivity {
             @Override
             public void onPlayEnd() {
                 startChooseActionActivity();
+            }
+
+            @Override
+            public void onPlayStart() {
+
             }
         });
     }

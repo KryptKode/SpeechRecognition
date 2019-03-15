@@ -69,6 +69,9 @@ public class Player implements MediaPlayer.OnPreparedListener {
     public void onPrepared(MediaPlayer mp){
         isReady = true;
         play();
+        if (listener != null) {
+            listener.onPlayStart();
+        }
     }
 
 
@@ -98,6 +101,7 @@ public class Player implements MediaPlayer.OnPreparedListener {
 
     public interface PlayerListener{
         void onPlayEnd();
+        void onPlayStart();
     }
 
 

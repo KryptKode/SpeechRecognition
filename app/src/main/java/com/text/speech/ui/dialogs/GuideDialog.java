@@ -58,7 +58,7 @@ public class GuideDialog extends DialogFragment {
             throw  new IllegalStateException("The three arrays for words in igbo and english and the corresponding igbo phones must be the same");
         }
 
-        //populate the englishWords
+        //populate the table
         for (int i = 0; i < englishWords.length; i++) {
             String englishWord = englishWords[i];
             String igboWord = igboWords[i];

@@ -91,6 +91,8 @@ public class SmsActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        populateTable(getString(R.string.kwusi_eng), getString(R.string.kwusi), getString(R.string.kwusi_phone));
+
     }
 
     @Override
@@ -105,6 +107,11 @@ public class SmsActivity extends BaseActivity {
             public void onPlayEnd() {
                 getPlayer().setListener(null);
                 initRecognizerWithPermissionCheck(PocketSphinxUtil.STOP);
+            }
+
+            @Override
+            public void onPlayStart() {
+
             }
         });
 

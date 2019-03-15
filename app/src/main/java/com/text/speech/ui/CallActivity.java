@@ -73,10 +73,10 @@ public class CallActivity extends BaseActivity {
                                 CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
                                         contact.getPhoneNumbers().get(0).getNumber());
                                 break;
-                            }else{
-                                Log.i(TAG, "handleResult: No name match:  "+ contact.getDisplayName());
+                            } else {
+                                Log.i(TAG, "handleResult: No name match:  " + contact.getDisplayName());
                             }
-                        }else{
+                        } else {
                             Log.i(TAG, "handleResult: Contact name is null");
                         }
                     }
@@ -89,7 +89,7 @@ public class CallActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-
+        populateTable(getString(R.string.daalu_eng), getString(R.string.daalu), getString(R.string.daalu_phone));
 
     }
 
@@ -103,6 +103,11 @@ public class CallActivity extends BaseActivity {
             public void onPlayEnd() {
                 getPlayer().setListener(null);
                 initRecognizerWithPermissionCheck(PocketSphinxUtil.THANK_YOU);
+            }
+
+            @Override
+            public void onPlayStart() {
+
             }
         });
 
@@ -181,17 +186,17 @@ public class CallActivity extends BaseActivity {
                             CallActivityPermissionsDispatcher.callPersonWithPermissionCheck(CallActivity.this,
                                     contact.getPhoneNumbers().get(0).getNumber());
                             break;
-                        }else{
-                            Log.i(TAG, "handleResult: No name match:  "+ contact.getDisplayName());
+                        } else {
+                            Log.i(TAG, "handleResult: No name match:  " + contact.getDisplayName());
                         }
-                    }else{
+                    } else {
                         Log.i(TAG, "handleResult: Contact name is null");
                     }
                 }
 
             }
-        }else{
-            if(!getPlayer().isPlaying()){
+        } else {
+            if (!getPlayer().isPlaying()) {
                 playSound(Player.REPEAT);
             }
 
@@ -206,14 +211,14 @@ public class CallActivity extends BaseActivity {
 
     @Override
     protected void handleEndSpeech() {
-        new Handler().postDelayed(() ->{
-            if(!handled){
+        new Handler().postDelayed(() -> {
+            if (!handled) {
                 startListeningWithTimeout(getPocketSphinxUtil().getRecognizer().getSearchName());
             }
         }, 1000);
 
         logTextView.setText(R.string.speech_ended);
-        new Handler().postDelayed(()->{
+        new Handler().postDelayed(() -> {
             logTextView.setText("");
         }, 2000);
         Log.i(TAG, "handleEndSpeech: ");

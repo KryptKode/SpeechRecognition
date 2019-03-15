@@ -42,6 +42,11 @@ public class MainActivity extends BaseActivity {
             public void onPlayEnd() {
                 showWordGuide();
             }
+
+            @Override
+            public void onPlayStart() {
+
+            }
         });
 
     }

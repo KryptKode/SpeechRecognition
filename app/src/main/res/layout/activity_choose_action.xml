@@ -10,6 +10,13 @@
     tools:context=".ui.ChooseActionActivity"
     tools:ignore="UnusedAttribute">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3"/>
+
     <com.text.speech.views.SupportVectorDrawableTextView
         android:id="@+id/tv_call"
         android:layout_width="0dp"
@@ -22,11 +29,12 @@
         android:text="@string/make_a_call"
         android:textColor="@color/colorPrimary"
         android:textSize="22sp"
+        app:layout_constraintVertical_bias="0"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_sms"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline"
         app:tv_DrawableTopCompat="@drawable/ic_call" />
 
 
@@ -68,5 +76,26 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:gravity="center"
         tools:text="Log"/>
+
+    <TextView
+        android:id="@+id/tv_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        tools:text="@string/word_guide"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        app:layout_constraintTop_toBottomOf="@id/tv_logs"/>
+
+    <LinearLayout
+        android:id="@+id/prompt"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_word"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

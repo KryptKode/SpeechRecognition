@@ -1,10 +1,19 @@
 package com.text.speech.ui.base;
 
 import android.Manifest;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.text.speech.R;
 import com.text.speech.media.Player;
@@ -145,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        guideDialog  = new GuideDialog();
+        guideDialog = new GuideDialog();
     }
 
     @Override
@@ -171,20 +180,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        return  true;
+        return true;
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_info){
+        if (item.getItemId() == R.id.action_info) {
             showWordGuide();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    protected  void showWordGuide(){
+    protected void showWordGuide() {
 
         guideDialog.show(getSupportFragmentManager(), guideDialog.getClass().getSimpleName());
     }
@@ -219,7 +228,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void stopListening() {
-       pocketSphinxUtil.stopListening();
+        pocketSphinxUtil.stopListening();
     }
 
     @Override
@@ -272,6 +281,52 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void handleResult(String hypothesis);
 
 
+    protected void populateTable(String englishWord, String igboWord, String phone) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_phones, null, false);
+        TableLayout tableLayout = view.findViewById(R.id.table);
+        ImageButton imageButton = view.findViewById(R.id.img_close);
+        imageButton.setVisibility(View.VISIBLE);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                view.setVisibility(View.GONE);
+            }
+        });
+
+
+        //populate the table
+
+        TextView englishTextView = new TextView(this, null, R.style.TableTextViewStyle);
+        englishTextView.setText(englishWord);
+        englishTextView.setBackgroundResource(R.drawable.border);
+        englishTextView.setGravity(Gravity.CENTER);
+        englishTextView.setPadding(4, 4, 4, 4);
+
+        TextView igboTextView = new TextView(this, null, R.style.TableTextViewStyle);
+        igboTextView.setText(igboWord);
+        igboTextView.setBackgroundResource(R.drawable.border);
+        igboTextView.setGravity(Gravity.CENTER);
+        igboTextView.setPadding(4, 4, 4, 4);
+
+
+        TextView phoneTextView = new TextView(this, null, R.style.TableTextViewStyle);
+        phoneTextView.setText(phone);
+        phoneTextView.setBackgroundResource(R.drawable.border);
+        phoneTextView.setGravity(Gravity.CENTER);
+        phoneTextView.setPadding(4, 4, 4, 4);
+        phoneTextView.setTypeface(phoneTextView.getTypeface(), Typeface.BOLD);
+
+        TableRow tableRow = new TableRow(this);
+        tableRow.addView(englishTextView);
+        tableRow.addView(igboTextView);
+        tableRow.addView(phoneTextView);
+
+        tableLayout.addView(tableRow);
+        ((LinearLayout) findViewById(R.id.prompt)).addView(view);
+
+    }
+
     private void handleErrors(Throwable e) {
         NotificationUtils.notifyUser(this, getString(R.string.error_occurred));
         Log.e(TAG, "onCreate: ", e);
@@ -285,7 +340,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             player = Player.getInstance(this, fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            NotificationUtils.notifyUser(this, getString(R.string.error_occurred) );
+            NotificationUtils.notifyUser(this, getString(R.string.error_occurred));
         }
     }
 

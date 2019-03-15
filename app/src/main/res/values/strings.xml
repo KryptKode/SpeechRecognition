@@ -37,11 +37,37 @@
     <string name="speech_ended">Speech ended</string>
     <string name="speech_started">Speech Started</string>
     <string name="word_guide">WORD GUIDE</string>
-    <string name="english_words">English words</string>
-    <string name="igbo_words">Igbo words</string>
-    <string name="igbo_phones">Igbo Phones</string>
-    <string name="learn_to_pronounce_the_igbo_words">Learn to pronounce the igbo words</string>
+    <string name="english_words">English word</string>
+    <string name="igbo_words">Igbo word</string>
+    <string name="igbo_phones">Igbo Phone</string>
+    <string name="learn_to_pronounce_the_igbo_words">Learn to pronounce the words</string>
     <string name="dismiss">Dismiss</string>
 
+
+    <string name="nnoo">NNOO</string>
+    <string name="nnoo_eng">HELLO</string>
+    <string name="nnoo_phone">N AO</string>
+
+
+    <string name="abuo">ABUO</string>
+    <string name="abuo_eng">TWO</string>
+    <string name="abuo_phone">AA B AO</string>
+
+
+    <string name="ato">ATO</string>
+    <string name="ato_eng">THREE</string>
+    <string name="ato_phone">AA T AO</string>
+
+    <string name="daalu">DAALU</string>
+    <string name="daalu_eng">THANK YOU</string>
+    <string name="daalu_phone">D AA L UW</string>
+
+
+    <string name="kwusi">KWUSI</string>
+    <string name="kwusi_eng">STOP</string>
+    <string name="kwusi_phone">K W UW S IY</string>
+    <string name="say">Say %s</string>
+    <string name="two">Two</string>
+    <string name="three">Three</string>
 
 </resources>

@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="words_igbo">
-        <item>NNOO</item>
-        <item>ABUO</item>
-        <item>ATO</item>
-        <item>DAALU</item>
-        <item>KWUSI</item>
+        <item>@string/nnoo</item>
+        <item>@string/abuo</item>
+        <item>@string/ato</item>
+        <item>@string/daalu</item>
+        <item>@string/kwusi</item>
     </array>
 
     <array name="words_english">
-        <item>HELLO</item>
-        <item>TWO</item>
-        <item>THREE</item>
-        <item>THANK YOU</item>
-        <item>STOP</item>
+        <item>@string/nnoo_eng</item>
+        <item>@string/abuo_eng</item>
+        <item>@string/ato_eng</item>
+        <item>@string/daalu_eng</item>
+        <item>@string/kwusi_eng</item>
     </array>
 
     <array name="phonemes">
-        <item>N AO</item>
-        <item>AA B AO</item>
-        <item>AA T AO</item>
-        <item>D AA L UW</item>
-        <item>K W UW S IY</item>
+        <item>@string/nnoo_phone</item>
+        <item>@string/abuo_phone</item>
+        <item>@string/ato_phone</item>
+        <item>@string/daalu_phone</item>
+        <item>@string/kwusi_phone</item>
     </array>
+
+
+
 
 
 </resources>
