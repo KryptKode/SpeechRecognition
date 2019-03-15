@@ -1,34 +1,23 @@
 package com.text.speech.ui;
 
 import android.content.Intent;
-import android.os.Handler;
-
-import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.disposables.CompositeDisposable;
-
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.text.speech.R;
-import com.text.speech.data.AppRepository;
-import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
 import com.text.speech.utils.PocketSphinxUtil;
 import com.text.speech.utils.WordUtils;
 
-import java.io.IOException;
-import java.sql.Time;
-
 
 public class TrainVoiceActivity extends BaseActivity {
     private static final String TAG = "TrainVoiceActivity";
 
-    private Repository repository;
     private ProgressBar progressBar;
     private Button button;
     private TextView doneTextView;
@@ -41,13 +30,16 @@ public class TrainVoiceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_voice);
-        repository = new AppRepository(this);
         button = (Button) findViewById(R.id.btn_done);
         doneTextView = (TextView) findViewById(R.id.tv_word);
         textView = (TextView) findViewById(R.id.tv_title);
         progressBar = findViewById(R.id.progress_bar);
         logTextView = findViewById(R.id.tv_logs);
 
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.train_your_voice_title_text));
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +71,6 @@ public class TrainVoiceActivity extends BaseActivity {
     private void voiceTrainingComplete() {
         textView.setText(R.string.voice_training_complete);
         button.setVisibility(View.VISIBLE);
-        repository.updateSetUp(false);
         playSound(Player.VOICE_TRAINING_COMPLETE);
         doneTextView.setVisibility(View.GONE);
         getPlayer().setListener(new Player.PlayerListener() {

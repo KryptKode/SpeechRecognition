@@ -21,6 +21,7 @@ public class PocketSphinxUtil implements RecognitionListener {
     public static final String THANK_YOU = "THANK";
     public static final String ONE = "ONE";
     public static final String TWO = "TWO";
+    public static final String THREE = "THREE";
     public static final String STOP = "STOP";
 
 
@@ -65,6 +66,7 @@ public class PocketSphinxUtil implements RecognitionListener {
                 .setAcousticModel(new File(assetsDir, "igbo"))
                 .setDictionary(new File(assetsDir, "igbo.dict"))
                 .setKeywordThreshold(1.0f)
+
                 .setRawLogDir(assetsDir) // To disable logging of raw audio comment out this call (takes a lot of space on the device)
                 .getRecognizer();
         recognizer.addListener(this);
@@ -74,6 +76,7 @@ public class PocketSphinxUtil implements RecognitionListener {
         recognizer.addKeyphraseSearch(ONE, WordUtils.ONE);
         recognizer.addKeyphraseSearch(TWO, WordUtils.TWO);
         recognizer.addKeyphraseSearch(STOP, WordUtils.STOP);
+        recognizer.addKeyphraseSearch(THREE, WordUtils.THREE);
 
 
 /*        // Create language model search

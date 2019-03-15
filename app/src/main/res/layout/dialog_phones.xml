@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:padding="4dp"
+        android:text="@string/word_guide"/>
+
+
+    <TextView
+        android:id="@+id/text_sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="4dp"
+        android:text="@string/learn_to_pronounce_the_igbo_words"/>
+
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TableLayout
+                android:id="@+id/table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:id="@+id/header">
+
+                    <TextView
+                        android:id="@+id/english"
+                        style="@style/TableTextViewStyle.Header"
+                        android:text="@string/english_words"
+                        />
+
+                    <TextView
+                        android:id="@+id/igbo"
+                        style="@style/TableTextViewStyle.Header"
+                        android:text="@string/igbo_words"
+                        />
+
+                    <TextView
+                        android:id="@+id/phones"
+                        style="@style/TableTextViewStyle.Header"
+                        android:text="@string/igbo_phones"
+                        />
+
+                </TableRow>
+
+
+
+            </TableLayout>
+
+        </ScrollView>
+
+
+    </HorizontalScrollView>
+</LinearLayout>

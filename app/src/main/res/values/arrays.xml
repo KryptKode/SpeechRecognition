@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="words_igbo">
+        <item>NNOO</item>
+        <item>ABUO</item>
+        <item>ATO</item>
+        <item>DAALU</item>
+        <item>KWUSI</item>
+    </array>
+
+    <array name="words_english">
+        <item>HELLO</item>
+        <item>TWO</item>
+        <item>THREE</item>
+        <item>THANK YOU</item>
+        <item>STOP</item>
+    </array>
+
+    <array name="phonemes">
+        <item>N AO</item>
+        <item>AA B AO</item>
+        <item>AA T AO</item>
+        <item>D AA L UW</item>
+        <item>K W UW S IY</item>
+    </array>
+
+
+</resources>

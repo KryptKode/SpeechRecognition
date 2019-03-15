@@ -1,15 +1,13 @@
 package com.text.speech;
 
+import android.app.Application;
+
 import com.text.speech.contacts.data.Contacts;
-import com.text.speech.db.DbInitializer;
 
-import androidx.multidex.MultiDexApplication;
-
-public class SpeechApp extends MultiDexApplication {
+public class SpeechApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
         Contacts.initialize(this);
-        DbInitializer.initialize(this);
     }
 }

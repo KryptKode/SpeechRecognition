@@ -62,7 +62,7 @@ public class ChooseActionActivity extends BaseActivity {
         getPlayer().setListener(new Player.PlayerListener() {
             @Override
             public void onPlayEnd() {
-                initRecognizerWithPermissionCheckTimeout(PocketSphinxUtil.ONE);
+                initRecognizerWithPermissionCheckTimeout(PocketSphinxUtil.TWO);
             }
         });
     }
@@ -75,9 +75,9 @@ public class ChooseActionActivity extends BaseActivity {
 
     @Override
     protected void handleResult(String hypothesis) {
-        if (hypothesis.equals(WordUtils.ONE)) {
+        if (hypothesis.equals(WordUtils.TWO)) {
             onClickCall(null);
-        } else if (hypothesis.equals(WordUtils.TWO)) {
+        } else if (hypothesis.equals(WordUtils.THREE)) {
             onClickSms(null);
         } else {
             if (!getPlayer().isPlaying()) {
@@ -91,13 +91,13 @@ public class ChooseActionActivity extends BaseActivity {
     @Override
     protected void handleTimeOut() {
         Log.i(TAG, "handleTimeOut: ");
-        if(getPocketSphinxUtil().getRecognizer().getSearchName().equals(PocketSphinxUtil.ONE)){
+        if(getPocketSphinxUtil().getRecognizer().getSearchName().equals(PocketSphinxUtil.TWO)){
             if (!getPlayer().isPlaying()) {
                 playSound(Player.SEND_AN_SMS_SAY_TWO);
                 getPlayer().setListener(new Player.PlayerListener() {
                     @Override
                     public void onPlayEnd() {
-                        startListeningWithTimeout(PocketSphinxUtil.TWO);
+                        startListeningWithTimeout(PocketSphinxUtil.THREE);
                     }
                 });
 
@@ -108,7 +108,7 @@ public class ChooseActionActivity extends BaseActivity {
                 getPlayer().setListener(new Player.PlayerListener() {
                     @Override
                     public void onPlayEnd() {
-                        startListeningWithTimeout(PocketSphinxUtil.ONE);
+                        startListeningWithTimeout(PocketSphinxUtil.TWO);
                     }
                 });
 

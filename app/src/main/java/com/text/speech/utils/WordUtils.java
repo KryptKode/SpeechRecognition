@@ -5,5 +5,6 @@ public class WordUtils {
     public static final String THANK_YOU = "DAALU".toLowerCase();
     public static final String ONE = "OFU".toLowerCase();
     public static final String TWO = "ABUO".toLowerCase();
+    public static final String THREE = "ATO".toLowerCase();
     public static final String STOP = "KWUSI".toLowerCase();
 }

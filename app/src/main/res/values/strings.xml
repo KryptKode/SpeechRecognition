@@ -33,9 +33,15 @@
     <string name="sms_icon">SMS Icon</string>
     <string name="make_a_call">Make a call</string>
     <string name="voice_icon">Voice Icon</string>
-    <string name="voice_training_complete">Voice training complete...</string>
+    <string name="voice_training_complete">Voice training complete…</string>
     <string name="speech_ended">Speech ended</string>
     <string name="speech_started">Speech Started</string>
+    <string name="word_guide">WORD GUIDE</string>
+    <string name="english_words">English words</string>
+    <string name="igbo_words">Igbo words</string>
+    <string name="igbo_phones">Igbo Phones</string>
+    <string name="learn_to_pronounce_the_igbo_words">Learn to pronounce the igbo words</string>
+    <string name="dismiss">Dismiss</string>
 
 
 </resources>

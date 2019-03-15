@@ -1,10 +1,14 @@
 package com.text.speech.ui.base;
 
 import android.Manifest;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.text.speech.R;
 import com.text.speech.media.Player;
+import com.text.speech.ui.dialogs.GuideDialog;
 import com.text.speech.ui.dialogs.InfoConfirmDialog;
 import com.text.speech.utils.NotificationUtils;
 import com.text.speech.utils.PocketSphinxUtil;
@@ -13,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import edu.cmu.pocketsphinx.Assets;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private Player player;
 
     private boolean isInitialized;
+    protected GuideDialog guideDialog;
 
 
     public Player getPlayer() {
@@ -137,6 +143,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        guideDialog  = new GuideDialog();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
@@ -154,6 +166,27 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!disposable.isDisposed()) {
             disposable.dispose();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return  true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_info){
+            showWordGuide();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected  void showWordGuide(){
+
+        guideDialog.show(getSupportFragmentManager(), guideDialog.getClass().getSimpleName());
     }
 
     protected void startListening() {

@@ -17,4 +17,19 @@
     </style>
 
 
+    <style name="TableTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:background">@drawable/border</item>
+
+    </style>
+
+    <style name="TableTextViewStyle.Header">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
 </resources>

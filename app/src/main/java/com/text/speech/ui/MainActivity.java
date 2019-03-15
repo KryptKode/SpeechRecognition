@@ -1,22 +1,15 @@
 package com.text.speech.ui;
 
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.IOException;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.text.speech.R;
-import com.text.speech.data.AppRepository;
-import com.text.speech.data.Repository;
 import com.text.speech.media.Player;
 import com.text.speech.ui.base.BaseActivity;
-import com.text.speech.utils.ToolTipUtils;
+import com.text.speech.ui.dialogs.GuideDialog;
 
 public class MainActivity extends BaseActivity {
 
@@ -26,15 +19,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Repository repository = new AppRepository(this);
-        if (repository.isSetUpComplete()) {
-            Intent intent = new Intent(this, ChooseActionActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            init();
-        }
+        init();
 
     }
 
@@ -44,15 +29,21 @@ public class MainActivity extends BaseActivity {
         playSound(Player.WELCOME_FILE);
         Button button = findViewById(R.id.button);
         button.setVisibility(View.GONE);
-        getPlayer().setListener(new Player.PlayerListener() {
+
+        guideDialog.setGuideListener(new GuideDialog.GuideListener() {
             @Override
-            public void onPlayEnd() {
+            public void onDismiss() {
                 onClickProceed();
             }
         });
 
-       /* ToolTipUtils tipUtils = new ToolTipUtils();
-        tipUtils.showToolTip(this, button, findViewById(R.id.main_root), getString(R.string.train_your_voice_title_text));*/
+        getPlayer().setListener(new Player.PlayerListener() {
+            @Override
+            public void onPlayEnd() {
+                showWordGuide();
+            }
+        });
+
     }
 
     public void onClickProceed() {
